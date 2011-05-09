@@ -49,8 +49,8 @@ class App < Sinatra::Base
     @user = User.find(params[:user_id])
     @user.venues << @venue
     
+    @user.score = 0 if @user.score.nil?
     if @answer.to_s.downcase == @venue.name.to_s.downcase
-      @user.score = 0 if @user.score.nil?
       @user.score += 100
       score_result = "CONGRATS, you are correct, You earned 100 points, Your total Score is #{@user.score}"  
     else
