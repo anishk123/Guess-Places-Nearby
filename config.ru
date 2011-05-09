@@ -13,7 +13,6 @@ require 'oauth2'
 require 'json'
 require 'open-uri'
 require 'mongo_mapper'
-require 'foursquare2'
 
 require File.join(File.dirname(__FILE__), 'models.rb')
 require File.join(File.dirname(__FILE__), 'main.rb')
