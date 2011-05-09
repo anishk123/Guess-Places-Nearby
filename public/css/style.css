@@ -132,10 +132,41 @@ header h1 {
 
 #map_canvas { height: 100% }
 
+input {
+    width: 230px;
+    background: #8a33c6;
+    padding: 6px;
+    margin-top: 10px;
+    border-top: 1px solid #ad64e0;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 0px;
+ 
+    /*** Adding CSS3 ***/
+ 
+    /*** Transition Selectors - What properties to animate and how long ***/
+    -webkit-transition-property: -webkit-box-shadow, background;
+    -webkit-transition-duration: 0.25s;
+ 
+    /*** Adding a small shadow ***/
+    -moz-box-shadow: 0px 0px 2px #000;
+    -webkit-box-shadow: 0px 0px 2px #000;
+}
 
-
-
-
+input.submit {
+    width: 100px;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: #000 1px 1px;
+    border-top: 1px solid #ad64e0;
+    margin-top: 10px;
+ 
+    /*** Adding CSS3 Gradients ***/
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#963AD6), to(#781bb9));
+    background:  -moz-linear-gradient(19% 75% 90deg,#781bb9, #963AD6);
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
 
 
 
