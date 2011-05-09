@@ -37,7 +37,9 @@ class App < Sinatra::Base
         @venue = new_venue
       else
         @venue = existing_venue if @user.venues.length <= 0
-        @venue = existing_venue if !@user.venues.include?(venue) && @user.venues.length > 0
+        puts @user.venues.inspect
+        puts existing_venue.inspect
+        @venue = existing_venue if !@user.venues.include?(existing_venue) && @user.venues.length > 0
       end
       break if !@venue.nil?
       end
