@@ -43,9 +43,23 @@ class App < Sinatra::Base
     erb :venues
   end
   
-  get '/venues/:id/:answer' do
+  post '/venues' do
+    @answer = params[:answer]    
+    @venue = Venue.find(params[:venue_id])
+    @user = User.find(params[:user_id])
+    @user.venues << @venue
     
+    if @answer.to_s.lowercase == @venue.name.to_s.lowercase
+      @user.score += 100
+      score_result = "CONGRATS, you are correct, You earned 100 points, Your total Score is #{@user.score}"  
+    else
+      @user.score += 100
+      score_result = "Sorry, that is incorrect. The name of the place is #{@venue.name}. You total Score remains at #{@user.score}"    
+    end
+    @user.save!
     
+    content_type :json
+    {:score_result => score_result}.to_json
   end
   
   
