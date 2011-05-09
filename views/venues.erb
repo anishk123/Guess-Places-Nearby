@@ -1,11 +1,32 @@
-<div style="padding:0px 0px 0px 0px">
-  <div style="margin:10px auto; width:100%;">
-	<div style="color: purple; font-weight: bold; font-size: 18px; margin-left: 10px;">
+<div style="color: purple; font-weight: bold; font-size: 14px; margin-left: 10px;">
       <%= @venue.categories.join("/") %> 
       <%= "at #{@venue.address}" if !@venue.address.nil? %>
       <%= "and #{@venue.cross_street}" if !@venue.cross_street.nil? %>
-      starting with letter <%= @venue.name[0].to_s %>
-    </div>
-    
-  </div>
+      starting with <%= @venue.name[0].to_s %> and
+      containing the letters 
+      <% @venue.name.split(" ").each do |name| %>
+        <%= name.split(//).sort_by{rand}.join + " " %>
+      <% end %>
 </div>
+<br/>   
+<div id="map_canvas" style="width:85%; height:300px; margin-left: 40px;"></div>
+
+<script type="text/javascript">
+  function gmap() {
+	console.log("plotting on google map");
+	console.log(document.getElementById("map_canvas"));
+    var myLatlng = new google.maps.LatLng(<%= @venue.location[0] %>, <%= @venue.location[1] %>);
+    var myOptions = {
+      zoom: 15,
+      center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    var marker = new google.maps.Marker({
+	      position: myLatlng,
+	      title:"?"
+	});
+	marker.setMap(map);
+  }
+  gmap();
+</script>

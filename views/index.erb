@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="css/style.css?v=2">
 
 	<script src="js/libs/modernizr-1.7.min.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 </head>
 <body>
 	<div id="container">
@@ -32,7 +33,9 @@
           <span style="float: right; color: red; margin-right: 20px;">Time: &nbsp;<span id="timeLeft"></span>&nbsp; left</span>
           <br /><br /><br />
           <div style="color: purple; margin-left: 10px;">Guess what Place is a...</div>
-	      <div id="venue"></div>
+          <br/>
+	      <div id="venue">
+	      </div>
 		</div>
 
 		<footer>

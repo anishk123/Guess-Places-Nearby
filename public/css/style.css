@@ -130,7 +130,7 @@ header h1 {
 	-webkit-transition: opacity 0.3s  ease-in-out;
 }
 
-
+#map_canvas { height: 100% }
 
 
 
