@@ -22,6 +22,7 @@ class App < Sinatra::Base
     @user = User.find(params[:user_id])
     @venue_groups = JSON.parse(open("https://api.foursquare.com/v2/venues/search.json?ll=#{@lat},#{@lng}&client_id=#{api_key}&client_secret=#{api_secret}").read)["response"]["groups"]
     
+    @venue = nil
     @venue_groups.each do |venue_group|
       venue_set = venue_group["items"]
       venue_set.each do |venue|
@@ -38,6 +39,7 @@ class App < Sinatra::Base
         @venue = existing_venue if @user.venues.length <= 0
         @venue = existing_venue if !@user.venues.include?(venue) && @user.venues.length > 0
       end
+      break if !@venue.nil?
       end
     end
     erb :venues
