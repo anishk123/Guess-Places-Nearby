@@ -170,6 +170,7 @@ input.submit {
     margin-top: 10px;
  
     /*** Adding CSS3 Gradients ***/
+    background-color: purple;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#963AD6), to(#781bb9));
     background:  -moz-linear-gradient(19% 75% 90deg,#781bb9, #963AD6);
     -moz-border-radius: 10px;
