@@ -2,7 +2,6 @@
       <%= @venue.categories.join("/") %> 
       <%= "at #{@venue.address}" if !@venue.address.nil? %>
       <%= "and #{@venue.cross_street}" if !@venue.cross_street.nil? %>
-      starting with <%= @venue.name[0].to_s %> and
       containing the letters 
       <% @venue.name.split(" ").each do |name| %>
         <%= name.split(//).sort_by{rand}.join + " " %>
