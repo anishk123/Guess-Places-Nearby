@@ -132,15 +132,23 @@ header h1 {
 
 #map_canvas { height: 100% }
 
+label {
+	font-size: 14px; 
+	font-weight: bold; 
+	margin-left: 45px; 
+	margin-top: 10px; 
+	margin-right: 10px;
+}
+
 input {
-    width: 230px;
-    background: #8a33c6;
+    width: 425px;
     padding: 6px;
     margin-top: 10px;
     border-top: 1px solid #ad64e0;
     border-left: 0px;
     border-right: 0px;
     border-bottom: 0px;
+    margin-right: 10px;
  
     /*** Adding CSS3 ***/
  
