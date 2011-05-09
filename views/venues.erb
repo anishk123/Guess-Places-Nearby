@@ -30,7 +30,7 @@
   gmap();
 </script>
 
-<form id="answerForm">
+<form id="answerForm" name="answerForm" action="#" method="post" onsubmit="post_answer(); return false;">
 <label>ANSWER:</label>
 <input type="text" id="answer" name="answer" />
 <input type="hidden" id="venue_id" name="venue_id" value="<%= @venue._id %>" />
@@ -40,7 +40,7 @@
 
 <script>
   // attach a submit handler to the form
-  $("#answerForm").submit(function(event) {
+  function post_answer() {
     // Send the data using post and put the results in a div
     $.post( "/venues", $("#answerform").serialize(),
       function( data ) {
