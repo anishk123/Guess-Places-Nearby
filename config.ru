@@ -17,4 +17,5 @@ require 'mongo_mapper'
 require File.join(File.dirname(__FILE__), 'models.rb')
 require File.join(File.dirname(__FILE__), 'main.rb')
 
+use Rack::Static, :urls => ["/css", "/images", "/js", "/favicon.ico", "/oreos.ttf", "/oreos.eot"], :root => "public"
 run App
