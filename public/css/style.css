@@ -113,7 +113,22 @@ header h1 {
   font-weight: bold;	
 }
 
+.darkOverlay{
+	background-color: #1a82f7;
+ 	background: -moz-radial-gradient(center 45deg, circle closest-corner, #1a82f7 0%, #2F2727 100%);
+  	background: -webkit-gradient(radial, center center, 0, center center, 300, from(#444), to(#000));
+  	position:absolute;z-index:20000; width:100%; height:100%;opacity:0;filter:alpha(opacity=0);
+}
 
+.darkOverlay_on{  	
+	opacity: 0.85;
+	-webkit-transition: opacity 0.3s  ease-in-out;
+}
+
+.darkOverlay_off{  	
+	opacity: 0;
+	-webkit-transition: opacity 0.3s  ease-in-out;
+}
 
 
 

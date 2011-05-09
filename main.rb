@@ -5,6 +5,50 @@ class App < Sinatra::Base
     erb :index
   end
   
+  get '/login' do
+    @uuid = params[:uuid].to_s
+    user = User.where(:uuid => @uuid).first
+    if user.nil?
+      puts "creating user"
+      user = User.create(:uuid => @uuid, :score => 0) 
+    end
+    content_type :json
+    {:user_id => user._id, :score => user.score}.to_json
+  end
+  
+  get '/venues' do
+    @lat = params[:lat].to_f
+    @lng = params[:lng].to_f
+    @user = User.find(params[:user_id])
+    @venue_groups = JSON.parse(open("https://api.foursquare.com/v2/venues/search.json?ll=#{@lat},#{@lng}&client_id=#{api_key}&client_secret=#{api_secret}").read)["response"]["groups"]
+    
+    @venue_groups.each do |venue_group|
+      venue_set = venue_group["items"]
+      venue_set.each do |venue|
+      existing_venue = Venue.where(:name => venue["name"], :location => {'$near' => [venue["location"]["lat"].to_f, venue["location"]["lng"].to_f] }).first
+      if existing_venue.nil?
+        new_venue = Venue.create(:name => venue["name"], :location => [venue["location"]["lat"].to_f, venue["location"]["lng"].to_f], :address => venue["location"]["address"], :city => venue["location"]["city"], :cross_street => venue["location"]["crossStreet"])
+        new_venue.categories = []
+        venue["categories"].each do |category|
+          new_venue.categories += [category["name"]]     
+        end
+        new_venue.save!
+        @venue = new_venue
+      else
+        @venue = existing_venue if @user.venues.length <= 0
+        @venue = existing_venue if !@user.venues.include?(venue) && @user.venues.length > 0
+      end
+      end
+    end
+    erb :venues
+  end
+  
+  get '/venues/:id/:answer' do
+    
+    
+  end
+  
+  
 # Authentication
 
   get '/auth/foursquare' do
@@ -54,9 +98,17 @@ class App < Sinatra::Base
 
 protected
 
+  def api_key
+    'H1IC5ABMAEYEROFEBOK3KUVYE3OK35OQY0OJKE10CAEOZ3GX'    
+  end
+  
+  def api_secret
+    'IJYABNWLT22ZAUWBVK0UGHTXVSKCPH4E53U5MZQBQKQPDPWL'  
+  end
+  
   def client
-    api_key    = ENV['API_KEY'] || 'H1IC5ABMAEYEROFEBOK3KUVYE3OK35OQY0OJKE10CAEOZ3GX'
-    api_secret = ENV['API_SECRET'] || 'IJYABNWLT22ZAUWBVK0UGHTXVSKCPH4E53U5MZQBQKQPDPWL'
+    api_key    = ENV['API_KEY'] || api_key
+    api_secret = ENV['API_SECRET'] || api_secret
     oauth_site = ENV['OAUTH_SITE'] || 'https://foursquare.com'
     options = {
       :site => ENV['SITE'] || 'https://api.foursquare.com',

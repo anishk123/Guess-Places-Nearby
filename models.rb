@@ -21,7 +21,10 @@ end
 class Venue
   include MongoMapper::Document
   key :name, String
-  key :category, String
+  key :categories, Array
+  key :address, String
+  key :cross_street, String
+  key :city, String
   key :location, Array
   ensure_index [[:location, '2d']]
   many :users, :class_name => "User", :foreign_key => :venue_ids

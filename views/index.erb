@@ -27,7 +27,12 @@
 		</header>
 
 		<div id="main" role="main">
-
+		  <br />
+          <span style="float: left; color: green; margin-left: 10px;">Score: &nbsp;<span id="score"></span></span>
+          <span style="float: right; color: red; margin-right: 20px;">Time: &nbsp;<span id="timeLeft"></span>&nbsp; left</span>
+          <br /><br /><br />
+          <div style="color: purple; margin-left: 10px;">Guess what Place is a...</div>
+	      <div id="venue"></div>
 		</div>
 
 		<footer>
@@ -37,6 +42,7 @@
 
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.1.min.js"%3E%3C/script%3E'))</script>
+	<script src="js/libs/jquery.canvas-loader.1.3.js"></script>
 	<script src="js/plugins.js"></script>
 	<script src="js/script.js"></script>
 	<!--[if lt IE 7 ]>
@@ -54,15 +60,88 @@
 	storage = window.localStorage;
 	var uuid = storage.getItem("uuid");
 	var geoLocation = null
+	var userID = null
+	$('html').prepend('<div id="overlayContainer"></div>');
 	
-	if(navigator.geolocation){
+	//overlay, alert, confirm, select
+	function showOverlay(){
+		$("#overlayContainer").html('<div class="darkOverlay"></div>');
+		$(".darkOverlay").addClass("darkOverlay_on");
+		overlay=true;
+	}
+
+	function hideOverlay(){
+		$(".dialog_container").addClass("off"); 
+		$(".darkOverlay").addClass("darkOverlay_off");
+		setTimeout(function(){$("#overlayContainer").html('');},300);
+		overlay=false;
+		$('.active').removeClass('active');
+	}
+	
+	function showLoading(){
+		showOverlay();
+		$(".darkOverlay").html('<div class="ajaxLoader">loading...</div>');
+		$(".ajaxLoader").canvasLoader({
+		  backgroundColor:'transparent',
+		  color:'#86d4f9',
+		  fps:10,
+		  radius:40,
+		  dotRadius:3  
+		  });
+		
+	}
+	
+	function hideLoading(){
+		hideOverlay();
+	}
+	
+	function guidGenerator() {
+	  var S4 = function() {
+	    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+	  };
+	  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+	}
+	
+	function successCallback(position) {
+	  geoLocation = position;
+      loginUser();
+	}
+	
+	function errorCallback(error) {
+	  if (console.log) {
+	    console.log(error);
+	  }
+	}
+	
+	function loginUser() {
+	  if(uuid==null) {
+	    uuid = guidGenerator();
+	    window.localStorage.setItem("uuid", uuid);
+	  }
+	  console.log("logging in user with uuid " + uuid);	
+	  $.get("/login?" + "uuid=" + uuid, function(data) {
+		userID = data.user_id;
+		$('#score').html(data.score);
+        //window.navigator.geolocation.watchPosition(successCallback, errorCallback, { frequency: 3000 });
+		loadVenues();
+	  });
+	}
+	
+	function loadVenues() {
+	  console.log("Getting List of trending venues from Foursquare");
+	  $.get("/venues?" + "lat=" + geoLocation.coords.latitude + "&lng=" + geoLocation.coords.longitude + "&user_id=" + userID, function(data) {
+	    $('#venue').html(data);
+	    hideLoading();
+	  });
+	}
+	
+	if(window.navigator.geolocation){
 	  errorCallback("Yes, Geolocation is Supported");
-	  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+	  window.navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 	} else {
 	  errorCallback("No, Geolocation is not Supported");
 	}
-	
-	
+	showLoading();
 	</script>
 </body>
 </html>
