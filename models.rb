@@ -25,7 +25,7 @@ class Venue
   key :address, String
   key :cross_street, String
   key :city, String
+  many :users, :class_name => "User", :foreign_key => :venue_ids
   key :location, Array
   ensure_index [[:location, '2d']]
-  many :users, :class_name => "User", :foreign_key => :venue_ids
 end
