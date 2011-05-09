@@ -1,0 +1,11 @@
+<div style="padding:0px 0px 0px 0px">
+  <div style="margin:10px auto; width:100%;">
+	<div style="color: purple; font-weight: bold; font-size: 18px; margin-left: 10px;">
+      <%= @venue.categories.join("/") %> 
+      <%= "at #{@venue.address}" if !@venue.address.nil? %>
+      <%= "and #{@venue.cross_street}" if !@venue.cross_street.nil? %>
+      starting with letter <%= @venue.name[0].to_s %>
+    </div>
+    
+  </div>
+</div>
