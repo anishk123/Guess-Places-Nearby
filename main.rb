@@ -1,10 +1,6 @@
 class App < Sinatra::Base
   set :sessions, true
 
-  helpers do
-    include Helpers
-  end
-
   get '/' do
     erb :index
   end
