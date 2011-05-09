@@ -50,10 +50,10 @@ class App < Sinatra::Base
     @user.venues << @venue
     
     if @answer.to_s.downcase == @venue.name.to_s.downcase
+      @user.score = 0 if @user.score.nil?
       @user.score += 100
       score_result = "CONGRATS, you are correct, You earned 100 points, Your total Score is #{@user.score}"  
     else
-      @user.score += 100
       score_result = "Sorry, that is incorrect. The name of the place is #{@venue.name}. You total Score remains at #{@user.score}"    
     end
     @user.save!
