@@ -128,7 +128,7 @@
 	    window.localStorage.setItem("uuid", uuid);
 	  }
 	  console.log("logging in user with uuid " + uuid);	
-	  $.get("/login?" + "uuid=" + uuid, function(data) {
+	  $.get("/login?" + "uuid=" + uuid, { timestamp:new Date().getTime() }, function(data) {
 		userID = data.user_id;
 		$('#score').html(data.score);
         //window.navigator.geolocation.watchPosition(successCallback, errorCallback, { frequency: 3000 });
@@ -138,7 +138,7 @@
 	
 	function loadVenues() {
 	  console.log("Getting List of trending venues from Foursquare");
-	  $.get("/venues?" + "lat=" + geoLocation.coords.latitude + "&lng=" + geoLocation.coords.longitude + "&user_id=" + userID, function(data) {
+	  $.get("/venues?" + "lat=" + geoLocation.coords.latitude + "&lng=" + geoLocation.coords.longitude + "&user_id=" + userID, { timestamp:new Date().getTime() }, function(data) {
 	    $('#venue').html(data);
 	    hideLoading();
 	  });

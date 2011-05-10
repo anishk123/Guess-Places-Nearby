@@ -43,7 +43,7 @@
   // attach a submit handler to the form
   function post_answer() {
     // Send the data using post and put the results in a div
-    $.post( "/venues", $("#answerForm").serialize(),
+    $.post( "/venues", $("#answerForm").serialize(), { timestamp:new Date().getTime() },
       function( data ) {
         $("#score").html(data.score_result);
         showLoading();
