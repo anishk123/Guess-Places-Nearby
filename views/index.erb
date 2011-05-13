@@ -6,7 +6,7 @@
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
 	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	
 	<title></title>
 	<meta name="description" content="">
@@ -20,35 +20,6 @@
 
 	<script src="js/libs/modernizr-1.7.min.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-</head>
-<body>
-	<div id="container">
-		<header>
-          <h1>GUESS &nbsp; PLACES &nbsp; NEARBY</h1>
-		</header>
-
-		<div id="main" role="main">
-		  <br />
-          <span style="float: left; color: green; margin-left: 10px; font-weight: bold;">Score: &nbsp;<span id="score"></span></span>
-          <!-- <span style="float: right; color: red; margin-right: 20px;">Time: &nbsp;<span id="timeLeft"></span>&nbsp; left</span> -->
-          <br /><br />
-          <div style="color: purple; margin-left: 10px; font-weight: bold;">Guess this Place Near You... </div>
-          <br/>
-	      <div id="venue">
-	      </div>
-		</div>
-	</div>
-	
-	<footer>
-	  <br /><br /><br />
-      This application an official entry towards IE9 Dev:unplugged contest in the Gaming (Geolocation) category. 
-      <br />
-      It was made on a Sunday evening on application deadline day because I (the developer) found out about the contest a bit too late but wanted to take part in it anyway. 
-      <br />
-      There is a lot of things that can be improved, but I hope the application shows the power of CSS3, HTML5, Geolocation and Foursquare API in a fun and interesting way.
-      <br />
-	</footer>
-
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 	<script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.5.1.min.js"%3E%3C/script%3E'))</script>
 	<script src="js/libs/jquery.canvas-loader.1.3.js"></script>
@@ -68,8 +39,8 @@
 	<script>
 	storage = window.localStorage;
 	var uuid = storage.getItem("uuid");
-	var geoLocation = null
-	var userID = null
+	var geoLocation = null;
+	var userID = null;
 	$('html').prepend('<div id="overlayContainer"></div>');
 	
 	//overlay, alert, confirm, select
@@ -104,6 +75,7 @@
 		hideOverlay();
 	}
 	
+	
 	function guidGenerator() {
 	  var S4 = function() {
 	    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -111,29 +83,22 @@
 	  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
 	}
 	
-	function successCallback(position) {
-	  geoLocation = position;
-      loginUser();
-	}
-	
-	function errorCallback(error) {
-	  if (console.log) {
-	    console.log(error);
-	  }
-	}
 	
 	function loginUser() {
 	  if(uuid==null) {
 	    uuid = guidGenerator();
 	    window.localStorage.setItem("uuid", uuid);
 	  }
-	  console.log("logging in user with uuid " + uuid);	
-	  $.get("/login?" + "uuid=" + uuid, { timestamp:new Date().getTime() }, function(data) {
-		userID = data.user_id;
-		$('#score').html(data.score);
-        //window.navigator.geolocation.watchPosition(successCallback, errorCallback, { frequency: 3000 });
-		loadVenues();
-	  });
+	  
+	  if(userID==null) {
+	    console.log("logging in user with uuid " + uuid);	
+	    $.get("/login?" + "uuid=" + uuid, { timestamp:new Date().getTime() }, function(data) {
+		  userID = data.user_id;
+		  $('#score').html(data.score);
+		  loadVenues();
+	    });
+	  }
+	  else loadVenues();
 	}
 	
 	function loadVenues() {
@@ -142,15 +107,107 @@
 	    $('#venue').html(data);
 	    hideLoading();
 	  });
+	  window.navigator.geolocation.watchPosition(watchSuccessCallback, errorCallback, {frequency: 3000, timeout: 60000});
 	}
 	
-	if(window.navigator.geolocation){
-	  errorCallback("Yes, Geolocation is Supported");
-	  window.navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-	} else {
-	  errorCallback("No, Geolocation is not Supported");
+	
+	var nav = null; 
+	function requestPosition() {
+	  if (nav == null) {
+	      nav = window.navigator;
+	  }
+	  if (nav != null) {
+	      var geoloc = nav.geolocation;
+	      if (geoloc != null) {
+	          geoloc.getCurrentPosition(successCallback, errorCallback, {timeout:60000});
+	      }
+	      else {
+	          alert("Geolocation not supported");
+	      }
+	  }
+	  else {
+	      alert("Navigator not found");
+	  }
 	}
+
+	function successCallback(position)
+	{
+	  geoLocation = position;
+	  if(userID==null)
+        loginUser();
+      else loadVenues();
+	}
+
+    function watchSuccessCallback(position)
+	{
+	  geoLocation = position;
+	}
+	
+	function errorCallback(error) {
+	    var message = "";  
+
+	    // Check for known errors
+	    switch (error.code) {
+	      case error.PERMISSION_DENIED:
+	          message = "This website does not have permission to use " + 
+	                    "the Geolocation API";
+	          break;
+	       case error.POSITION_UNAVAILABLE:
+	          message = "The current position could not be determined.";
+	          break;
+	       case error.PERMISSION_DENIED_TIMEOUT:
+	          message = "The current position could not be determined " + 
+	                    "within the specified timeout period.";            
+	          break;
+	    }
+
+	    // If it is an unknown error, build a message that includes 
+	    // information that helps identify the situation so that 
+	    // the error handler can be updated.
+	    if (message == "")
+	    {
+	        var strErrorCode = error.code.toString();
+	        message = "The position could not be determined due to " + 
+	                  "an unknown error (Code: " + strErrorCode + "). " +
+	                  "Please restart your browser and try again";
+	    }
+	    alert(message);
+	}
+	
 	showLoading();
+	requestPosition();
 	</script>
+</head>
+
+
+<body>
+	
+	<div id="container">
+		<header>
+          <h1>GUESS &nbsp; PLACES &nbsp; NEARBY</h1>
+		</header>
+
+		<div id="main" role="main">
+		  <br />
+          <span style="float: left; color: green; margin-left: 10px; font-weight: bold;">Score: &nbsp;<span id="score"></span></span>
+          <!-- <span style="float: right; color: red; margin-right: 20px;">Time: &nbsp;<span id="timeLeft"></span>&nbsp; left</span> -->
+          <br /><br />
+          <div style="color: purple; margin-left: 10px; font-weight: bold;">Guess this Place Near You... </div>
+          <br/>
+	      <div id="venue">
+	      </div>
+		</div>
+	</div>
+	
+	<footer>
+	  <br /><br /><br />
+      This application an official entry towards IE9 Dev:unplugged contest in the Gaming (Geolocation) category. 
+      <br />
+      It was made on a Sunday evening on application deadline day because I (the developer) found out about the contest a bit too late but wanted to take part in it anyway. 
+      <br />
+      There is a lot of things that can be improved, but I hope the application shows the power of CSS3, HTML5, Geolocation and Foursquare API in a fun and interesting way.
+      <br />
+	</footer>
+
 </body>
 </html>
