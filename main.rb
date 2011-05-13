@@ -20,7 +20,9 @@ class App < Sinatra::Base
     @lat = params[:lat].to_f
     @lng = params[:lng].to_f
     @user = User.find(params[:user_id])
-    @venue_groups = JSON.parse(open("https://api.foursquare.com/v2/venues/search.json?ll=#{@lat},#{@lng}&client_id=#{api_key}&client_secret=#{api_secret}").read)["response"]["groups"]
+    while @venue_groups.nil?
+      @venue_groups = JSON.parse(open("https://api.foursquare.com/v2/venues/search.json?ll=#{@lat},#{@lng}&client_id=#{api_key}&client_secret=#{api_secret}").read)["response"]["groups"]
+    end
     
     @venue = nil
     @venue_groups.each do |venue_group|
