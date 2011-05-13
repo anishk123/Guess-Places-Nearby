@@ -1,10 +1,12 @@
 <div style="color: purple; font-weight: bold; font-size: 14px; margin-left: 10px;">
-      <%= @venue.categories.join("/") %> 
+      <%= @venue.categories.join("/") if !@venue.categories.nil? %> 
       <%= "at #{@venue.address}" if !@venue.address.nil? %>
       <%= "and #{@venue.cross_street}" if !@venue.cross_street.nil? %>.
       Contains the letters 
-      <% @venue.name.split(" ").each do |name| %>
-        <%= name.split(//).sort_by{rand}.join + " " %>
+      <% if !@venue.name.nil? %>
+        <% @venue.name.split(" ").each do |name| %>
+          <%= name.split(//).sort_by{rand}.join + " " %>
+        <% end %>
       <% end %>
 </div>
 <br/>   
