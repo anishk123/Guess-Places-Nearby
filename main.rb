@@ -117,14 +117,6 @@ class App < Sinatra::Base
   end
 
 protected
-
-  def api_key
-    'H1IC5ABMAEYEROFEBOK3KUVYE3OK35OQY0OJKE10CAEOZ3GX'    
-  end
-  
-  def api_secret
-    'IJYABNWLT22ZAUWBVK0UGHTXVSKCPH4E53U5MZQBQKQPDPWL'  
-  end
   
   def client
     api_key    = ENV['API_KEY'] || api_key

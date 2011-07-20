@@ -14,6 +14,7 @@ require 'json'
 require 'open-uri'
 require 'mongo_mapper'
 
+require File.join(File.dirname(__FILE__), 'config.rb')
 require File.join(File.dirname(__FILE__), 'models.rb')
 require File.join(File.dirname(__FILE__), 'main.rb')
 

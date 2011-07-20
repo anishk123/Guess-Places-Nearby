@@ -1,9 +1,3 @@
-#dbh04.mongolab.com:27047/guess_places_nearby -u <username> -p <password>
-mongo_host = 'dbh04.mongolab.com'
-mongo_db = 'guess_places_nearby'
-mongo_port = '27047'
-mongo_user = 'root'
-mongo_password = 'dino1967'
 MongoMapper.connection = Mongo::Connection.new(mongo_host, mongo_port)
 MongoMapper.database = mongo_db
 MongoMapper.database.authenticate(mongo_user, mongo_password)
