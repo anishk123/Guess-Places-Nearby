@@ -1,0 +1,13 @@
+Guess-Places-Nearby
+  (c) 2011 Anish Kumar (anishk123)
+
+Guess Places Nearby is a fun location based quiz where you are given clues about a store, restaurant, museum etc. near your current location and asked to Name the Place. 
+It uses the Geolocation API in HTML5 along with Foursquare API.
+Built in Sinatra, using MongoDB backend and geo mongo indexing
+
+=== Run on your own server by
+
+1. adding in mongodb configuration in config.rb
+2. setup foursquare dev account and application @ dev.foursquare.com
+3. adding in foursquare app api key and secret in config.rb
+4. shotgun -p 4567 main.rb
